@@ -6,5 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dracurrer</title>
   </head>
-  <body></body>
+  <body>
+    <table border="1">
+      {% for key, value in result.items() %}
+
+      <tr>
+        <th>{{ key }}</th>
+        <td>{{ value }}</td>
+      </tr>
+
+      {% endfor %}
+    </table>
+  </body>
 </html>
