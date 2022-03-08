@@ -4,18 +4,26 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- jQuery Import -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Dracurrer</title>
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          type: "GET",
+          url: "/api/drama_lists",
+          data: {},
+          success: function(response) {
+            // 드라마 리스트를 잘 받아오는지 체크
+            console.log(response);
+          }
+        })
+      })
+      
+    </script>
   </head>
   <body>
-    <table border="1">
-      {% for key, value in result.items() %}
-
-      <tr>
-        <th>{{ key }}</th>
-        <td>{{ value }}</td>
-      </tr>
-
-      {% endfor %}
+    
     </table>
   </body>
 </html>
