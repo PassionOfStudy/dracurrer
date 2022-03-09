@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <title>Document</title>
+    <style>
+      body {
+        margin: auto;
+      }
+      .t-box {
+        display: inline-block;
+        font-size: 35px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+      .container-box {
+        width: 1000px;
+        margin: auto;
+        padding: 0px 50px 50px 50px;
+      }
+      .rig-box {
+        margin-left: 30px;
+      }
+      .dt-box {
+        position: relative;
+        font-size: 12px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid gray;
+        color: gray;
+      }
+      .sum-box {
+        margin-bottom: 10px;
+      }
+      .bo-box {
+        display: flex;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-bottom: 30px;
+        padding-top: 30px;
+      }
+      .custom-file {
+        margin-top: 30px;
+        margin-bottom: 16px;
+      }
+      .but-box {
+        display: flex;
+        justify-content: space-between;
+      }
+      #star {
+        height: 40px;
+      }
+      #card-box {
+        margin-top: 30px;
+      }
+      select option[value=""][disabled] {
+        display: none;
+      }
+      .logo-box {
+        width: auto;
+        height: 100px;
+        background-color: white;
+      }
+    </style>
+    <script>
+      $(document).ready(function () {
+        bsCustomFileInput.init();
+        listing();
+      });
+
+      function listing() {
+        $.ajax({
+          type: "GET",
+          url: "/api/review",
+          data: {},
+          success: function (response) {
+            let reviews = response["all_review"];
+            for (let i = 0; i < reviews.length; i++) {
+              let title = reviews[i]["title"];
+              let contents = reviews[i]["contents"];
+              let star = reviews[i]["star"];
+              let file = reviews[i]["file"];
+              let time = reviews[i]["time"];
+
+              let temp_html = `<div class="col">
+                                <div class="card h-100">
+                                    <img src="../static/${file}" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-text">${contents}</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <small class="text-muted">${time} <br> 😍 &nbsp; ${star}</small>
+                                        </div>
+                                </div>
+                            </div>`;
+              $("#card-box").append(temp_html);
+            }
+          },
+        });
+      }
+
+      function posting() {
+        let title = $("#title").val();
+        let contents = $("#contents").val();
+        let star = $("#star").val();
+
+        let file = $("#file")[0].files[0];
+        let form_data = new FormData();
+
+        form_data.append("file_give", file);
+        form_data.append("title_give", title);
+        form_data.append("contents_give", contents);
+        form_data.append("star_give", star);
+
+        $.ajax({
+          type: "POST",
+          url: "/api/review",
+          data: form_data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            alert(response["msg"]);
+            window.location.reload();
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="logo-box"></div>
+    <div class="container-box">
+      <div class="bo-box">
+        <div class="pos-box">
+          <img
+            src="https://img.wavve.com/202111/20211124/d01805f1ce540a70b1ecc09c2981a09c_w720_h1038_q75.jpg"
+            width="400"
+            height="600"
+          />
+        </div>
+
+        <div class="rig-box">
+          <div class="sum-box">
+            <span class="t-box">그 해 우리는</span> <br />
+            헤어진 연인이 고등학교 시절 촬영한 다큐멘터리의 역주행 인기로 강제
+            소환되면서 펼쳐지는 청춘 성장 로맨스
+          </div>
+          <div class="dt-box">
+            <div>감독 : 김윤진 | 작가 : 이나은</div>
+            <div>
+              개요 : SBS, 대한민국, 2022년 | 장르 : #월화드라마, #로맨스, #청춘
+            </div>
+          </div>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="file" />
+            <label class="custom-file-label" for="file"
+              >마음에 드는 장면을 찍어서 올려주세요!</label
+            >
+          </div>
+          <form action="#">
+            <div class="form-group">
+              <input
+                type="text"
+                id="title"
+                class="form-control"
+                placeholder="선택하신 사진의 제목을 붙여주세요!"
+                style="color: gray"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <textarea
+                class="form-control"
+                id="contents"
+                rows="7"
+                placeholder="어느 점이 인상 깊으셨나요?"
+                required
+              ></textarea>
+            </div>
+            <div class="but-box">
+              <div>
+                <select id="star" name="star" style="color: gray" required>
+                  <option value="" disabled selected>
+                    해당 드라마의 별점을 매겨주세요!
+                  </option>
+                  <option value="1">😍</option>
+                  <option value="2">😍😍</option>
+                  <option value="3">😍😍😍</option>
+                  <option value="4">😍😍😍😍</option>
+                  <option value="5">😍😍😍😍😍</option>
+                </select>
+              </div>
+              <div>
+                <input type="reset" class="btn btn-danger" value="다시 쓰기" />
+              </div>
+              <div>
+                <input
+                  type="button"
+                  onclick="posting()"
+                  class="btn btn-primary"
+                  value="저장하기"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="card-box"></div>
+    </div>
+  </body>
+</html>

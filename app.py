@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
 app.config['JSON_AS_ASCII'] = False
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -18,13 +19,19 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
+################################################################################################################################################
 # 아틀라스 몽고 DB접속
-## 로그인을 위한 MongoDB 접속
+## 로그인을 위한 MongoDB 접속 ##
+## cilient = 회원가입 & 로그인 DB , client2 = 드라마 크롤링정보 및 게시판 타이틀 DB, client3 = 게시판 리뷰 작성 DB ##
 client = MongoClient('mongodb+srv://test:sparta@cluster0.rmyvw.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 client2 = MongoClient('mongodb+srv://test:sparta@cluster0.jhcn4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 db2 = client2.dbprojects
-# 메인 
+client3 = MongoClient('mongodb+srv://wlsgurdl54:dngkgk5415!@cluster0.rqgeg.mongodb.net/Cluster0?retryWrites=true&w=majority')
+db3 = client.dbsparta
+
+## 리스팅 기능 구현 및 사용자 게시판 등록 페이지 구현 ##
+################################################################################################################################################  
 @app.route('/')
 def main():
     drama_lists = list(db2.dracurrer.find({}, {'_id':False}))
@@ -70,6 +77,8 @@ def showList():
 
     return jsonify({'msg': '보여주기 완료!'})
 
+############################################################################################################
+## 로그인 기능 구현 ##
 def home():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -133,7 +142,47 @@ def check_dup():
     username_receive = request.form['username_give']
     exists = bool(db.users.find_one({"username": username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
+################################################################################################################################################
+## 게시판 리뷰 기능 구현 ##
+@app.route('/review')
+def home():
+    return render_template('review.html')
+
+@app.route('/api/review', methods=['GET'])
+def show_review():
+    reviews = list(db.review.find({}, {'_id': False}))
+    return jsonify({'all_review': reviews})
+
+@app.route('/api/review', methods=['POST'])
+def save_review():
+    title_receive = request.form['title_give']
+    contents_receive = request.form['contents_give']
+    star_receive = request.form['star_give']
+
+    file = request.files["file_give"]
+    extension = file.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
 
 
+    save_to = f'static/{filename}.{extension}'
+    file.save(save_to)
+
+
+    doc = {
+        'title':title_receive,
+        'contents':contents_receive,
+        'star':star_receive,
+        'file':f'{filename}.{extension}',
+        'time':today.strftime('%Y.%m.%d')
+    }
+
+    db.review.insert_one(doc)
+
+
+    return jsonify({'msg': '리뷰가 등록되었습니다!'})
+################################################################################################################################################
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
