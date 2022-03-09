@@ -3,24 +3,28 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
 from bs4 import BeautifulSoup
 import requests
-import jwt
+import jwt  # pyjwt 모듈도 함께 설치해줘야함.
 import datetime
 import hashlib
+# h5py ?? 아직 잘 모르겠음
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-# 아틀라스 몽고 DB접속
-personalMongoAddress = ''
-personalCollectionDB = ''
-client = MongoClient(personalMongoAddress)
-db = client.personalCollectionDB
 
+
+# 아틀라스 몽고 DB접속
+## 로그인을 위한 MongoDB 접속
+client = MongoClient('mongodb+srv://test:sparta@cluster0.rmyvw.mongodb.net/Cluster0?retryWrites=true&w=majority')
+db = client.dbsparta
+client2 = MongoClient('mongodb+srv://test:sparta@cluster0.jhcn4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+db2 = client2.dbprojects
 # 메인 
 @app.route('/')
 def main():
@@ -59,13 +63,13 @@ def saveDramaList():
             'drama_image': drama_image,
             'drama_desc': drama_desc
         }
-        db.dracurrer.insert_one(doc);
+        db2.dracurrer.insert_one(doc);
         return jsonify({'msg': '등록이 완료되었습니다!'})
 
 # MongoDB에 저장된 드라마관련 정보를 불러오는 API
 @app.route('/api/drama_lists', methods = ['GET'])
 def viewDramaList():
-    drama_lists = list(db.dracurrer.find({}, {'_id':False}))
+    drama_lists = list(db2.dracurrer.find({}, {'_id':False}))
     return jsonify({'drama_lists': drama_lists})
 
 def home():
@@ -134,4 +138,4 @@ def check_dup():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)
