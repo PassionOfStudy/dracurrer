@@ -58,3 +58,6 @@ main {
   background-color: #ffffff;
   color: #212529;
 }
+.mycards > div > div > h5 > a {
+  color: turquoise;
+}

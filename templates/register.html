@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- jQuery Import -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <title>Register Page</title>
+    <script>
+      $(document).ready(function () {
+        dataShow();
+      });
+
+      function dataSend() {
+        const drama_url = document.querySelector("#post-url").value;
+        const board_title = document.querySelector("#post-title").value;
+        alert("동작!");
+        $.ajax({
+          type: "POST",
+          url: "/dramalists",
+          data: { url_give: drama_url, title_give: board_title },
+          success: function (response) {
+            alert(response["msg"]);
+            window.location.href = "/";
+          },
+        });
+        return true;
+      }
+      function dataShow() {}
+    </script>
+  </head>
+  <body>
+    <div>
+      <label for="url">드라마 URL:</label>
+      <input id="post-url" type="text" name="url_give" \ />
+    </div>
+    <div>
+      <label for="title">게시판 제목:</label>
+      <input id="post-title" type="text" name="title_give" />
+    </div>
+    <button onclick="dataSend()">등록하기</button>
+  </body>
+</html>
