@@ -17,26 +17,28 @@
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
     />
     <!-- Font Awesome CSS -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
-      rel="stylesheet"
-    />
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
+
       body {
-        background-color: RGBA(52, 196, 232, 0.2);
         min-height: 100vh;
+        background: linear-gradient(rgb(29, 0, 29), rgb(99, 48, 1));
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+      }
+
+      .ti-box {
+        text-align: center;
+        font-family: "Creepster", cursive;
+        font-size: 100px;
+        color: white;
+        padding-top: 100px;
       }
 
       .section {
@@ -45,34 +47,33 @@
         margin: auto;
       }
 
-      .title {
-        font-weight: 800;
-        font-size: 5rem;
-        font-family: "Jua", sans-serif;
-      }
-
-      .subtitle {
-        font-size: 2rem;
-      }
-
       .is-sparta {
-        color: #34c4e8 !important;
+        color: rgb(245, 141, 45) !important;
       }
 
       .button.is-sparta {
-        background-color: #34c4e8;
+        background-color: rgb(245, 141, 45);
         border-color: transparent;
         color: #fff !important;
       }
 
       .button.is-sparta.is-outlined {
         background-color: transparent;
-        border-color: #34c4e8;
-        color: #34c4e8 !important;
+        border-color: rgb(245, 141, 45);
+        color: rgb(245, 141, 45) !important;
       }
 
       .help {
         color: gray;
+      }
+      div > span {
+        color: red;
+      }
+      .img-box {
+        position: absolute;
+        bottom: 52px;
+        width: 600px;
+        height: 850px;
       }
     </style>
     <script>
@@ -254,14 +255,13 @@
     </script>
   </head>
   <body>
-    <section class="hero is-white">
-      <div
-        class="hero-body has-text-centered"
-        style="padding-bottom: 1rem; margin: auto"
-      >
-        <h1 class="title is-sparta">Draculer</h1>
-      </div>
-    </section>
+    <div class="ti-box">Dracurr<span>e</span>r</div>
+    <div class="img-box">
+      <img
+        src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbDgtzC%2FbtrvAbxnFP8%2FRTVG6edmZQ3lTTSM7Ssna1%2Fimg.png"
+        alt=""
+      />
+    </div>
     <section class="section">
       <div class="container">
         <div class="box" style="max-width: 480px; margin: auto">
