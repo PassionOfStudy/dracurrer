@@ -9,6 +9,7 @@ import hashlib
 # h5py ?? 아직 잘 모르겠음
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
@@ -51,7 +52,7 @@ def saveList():
     if request.method == 'POST':
         result = request.form
         receive_drama_title = result['drama_title_give']
-        receive_board_title = result['board_title_give']
+        # receive_board_title = result['board_title_give'] (추후 게시판 이름 추가 예정)
 
         # 사용자가 입력한 드라마 제목을 받아 웹크롤링을 통해 드라마 정보를 가져온다
         # Selenium을 사용
@@ -70,23 +71,27 @@ def saveList():
         sleep(3)  # 페이지가 로딩되는 동안 3초 간 기다립니다. 
 
         # req = driver.page_source  # html 정보를 가져옵니다.
-        drama_title = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[1]/div[1]/h2/a/strong').text
-        drama_desc = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/div[1]').text
-        drama_image = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/a/img').get_attribute('src')
-        driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
-
-        doc = {
-            'drama_title': drama_title,
-            'drama_image': drama_image,
-            'drama_desc': drama_desc,
-            'board_title': receive_board_title
-        }
-        db2.dracurrer.insert_one(doc);
-        return jsonify({'msg': '등록이 완료되었습니다!'})
-
+        try:
+            drama_title = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[1]/div[1]/h2/a/strong').text
+            drama_desc = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/div[1]').text
+            drama_image = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/a/img').get_attribute('src')
+            driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
+            doc = {
+                'drama_title': drama_title,
+                'drama_image': drama_image,
+                'drama_desc': drama_desc
+                # 'board_title': receive_board_title (추후 게시판 이름 추가 예정)
+            }
+            db2.dracurrer.insert_one(doc);
+            
+            return jsonify({'msg': '등록이 완료되었습니다!'})
+        except:
+            print('오류가 발생하였습니다!')
+            driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
+            return jsonify({'msg': 'Error'})
+    
 @app.route('/dramalists', methods=['GET'])
 def showList():
-
     return jsonify({'msg': '보여주기 완료!'})
 
 ############################################################################################################

@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- BootStrap5 Import -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
     <!-- jQuery Import -->
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -12,40 +19,104 @@
     ></script>
     <title>Register Page</title>
     <script>
-      $(document).ready(function () {
-        dataShow();
-      });
+      $(document).ready(function () {});
 
       function dataSend() {
         const drama_title_give = document.querySelector("#post-url").value;
-        const board_title_give = document.querySelector("#post-title").value;
+        // const board_title_give = document.querySelector("#post-title").value; (추후 게시판 이름 추가 예정)
         alert("동작!");
         $.ajax({
           type: "POST",
           url: "/dramalists",
           data: {
             drama_title_give: drama_title_give,
-            board_title_give: board_title_give,
+            // board_title_give: board_title_give (추후 게시판 이름 추가 예정)
+          },
+          error: function (error) {
+            alert("error 발생");
           },
           success: function (response) {
-            alert(response["msg"]);
-            window.location.href = "/";
+            if (response["error"] == false) {
+              alert(response["complete"]);
+              window.location.href = "/";
+            } else {
+              alert(response["error"]);
+            }
           },
         });
-        return true;
       }
-      function dataShow() {}
     </script>
   </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
+    body {
+      min-height: 80vh;
+      background: linear-gradient(rgb(29, 0, 29), rgb(99, 48, 1));
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
+    .form-control {
+      width: 600px;
+      height: 60px;
+    }
+    .url-box {
+      width: 700px;
+      display: flex;
+      justify-content: space-between;
+      margin: auto;
+    }
+    #bt_box {
+      background-color: rgb(245, 141, 45);
+      border-color: rgb(245, 141, 45);
+      height: 60px;
+    }
+    div > span {
+      color: red;
+    }
+    .lg_box {
+      font-size: 100px;
+      color: white;
+      font-family: "Creepster", cursive;
+      text-align: center;
+      margin-top: 200px;
+      margin-bottom: 100px;
+    }
+    .img_box {
+      position: absolute;
+      bottom: 0px;
+    }
+  </style>
   <body>
-    <div>
-      <label for="url">드라마 제목:</label>
-      <input id="post-url" type="text" name="drama_title_give" \ />
+    <div class="lg_box">Dracurr<span>e</span>r</div>
+    <div class="img_box">
+      <img
+        src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbDgtzC%2FbtrvAbxnFP8%2FRTVG6edmZQ3lTTSM7Ssna1%2Fimg.png"
+        width="400"
+        height="700"
+      />
     </div>
-    <div>
-      <label for="title">게시판 제목:</label>
-      <input id="post-title" type="text" name="board_title_give" />
+    <div class="url-box">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          id="post-url"
+          class="form-control"
+          name="drama_title_give"
+          placeholder="원하시는 드라마를 인터넷에서 검색하고 그 주소를 복사해서 붙여주세요!"
+        />
+        <label for="url"></label>
+      </div>
+      <div>
+        <button
+          type="button"
+          id="bt_box"
+          class="btn btn-secondary"
+          onclick="dataSend()"
+        >
+          등록하기
+        </button>
+      </div>
     </div>
-    <button onclick="dataSend()">등록하기</button>
   </body>
 </html>
