@@ -17,13 +17,16 @@
       });
 
       function dataSend() {
-        const drama_url = document.querySelector("#post-url").value;
-        const board_title = document.querySelector("#post-title").value;
+        const drama_title_give = document.querySelector("#post-url").value;
+        const board_title_give = document.querySelector("#post-title").value;
         alert("동작!");
         $.ajax({
           type: "POST",
           url: "/dramalists",
-          data: { url_give: drama_url, title_give: board_title },
+          data: {
+            drama_title_give: drama_title_give,
+            board_title_give: board_title_give,
+          },
           success: function (response) {
             alert(response["msg"]);
             window.location.href = "/";
@@ -36,12 +39,12 @@
   </head>
   <body>
     <div>
-      <label for="url">드라마 URL:</label>
-      <input id="post-url" type="text" name="url_give" \ />
+      <label for="url">드라마 제목:</label>
+      <input id="post-url" type="text" name="drama_title_give" \ />
     </div>
     <div>
       <label for="title">게시판 제목:</label>
-      <input id="post-title" type="text" name="title_give" />
+      <input id="post-title" type="text" name="board_title_give" />
     </div>
     <button onclick="dataSend()">등록하기</button>
   </body>

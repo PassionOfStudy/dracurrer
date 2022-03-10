@@ -9,6 +9,9 @@ import hashlib
 # h5py ?? 아직 잘 모르겠음
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from time import sleep
 
 app = Flask(__name__)
 
@@ -47,27 +50,36 @@ def saveList():
     # 등록페이지에서 Form태그에서 POST로 보낸 값 가져오기
     if request.method == 'POST':
         result = request.form
-        receive_url = result['url_give']
-        receive_title = result['title_give']
+        receive_drama_title = result['drama_title_give']
+        receive_board_title = result['board_title_give']
 
-        # 사용자가 입력한 Dram URL을 받아 메타정보를 가져와 MongoDB에 저장한다
-        target_url = receive_url
-        headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-        data = requests.get(target_url,headers=headers)
-        ## utf-8로 바꾸어 주기
-        html = data.content.decode('utf-8', 'replace')
-        # HTML을 BeautifulSoup이라는 라이브러리를 활용해 검색하기 용이한 상태로 만듦
-        soup = BeautifulSoup(html, 'html.parser')
-        # 각 드라마 페이지의 메타정보를 추출
-        # Q) 메타태그인 og를 이용한이유? og태그의 경우 표준규약이기 때문에 웹페이지를 만들 떄 공통됨
-        drama_title = soup.select_one('meta[property="og:title"]')['content'];
-        drama_image = soup.select_one('meta[property="og:image"]')['content'];
-        drama_desc = soup.select_one('meta[property="og:description"]')['content'];
+        # 사용자가 입력한 드라마 제목을 받아 웹크롤링을 통해 드라마 정보를 가져온다
+        # Selenium을 사용
+        driver = webdriver.Chrome('./chromedriver')  # 드라이버를 실행합니다.
+        path = "https://www.naver.com/"
+        drama_name = receive_drama_title
+
+        driver.get(path)  # 드라이버에 해당 url의 웹페이지를 띄웁니다.
+        # driver.title이 NAVER가 아니면 예외처리를 하여 Error을 내줘라는 코드!
+        assert "NAVER" in driver.title
+        # 해당 웹페이지에 element에 커서를 두고 입력값을 넣은 다음에 엔터키 동작까지
+        elem = driver.find_element_by_id("query")
+        elem.send_keys(drama_name)
+        elem.send_keys(Keys.RETURN)
+
+        sleep(3)  # 페이지가 로딩되는 동안 3초 간 기다립니다. 
+
+        # req = driver.page_source  # html 정보를 가져옵니다.
+        drama_title = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[1]/div[1]/h2/a/strong').text
+        drama_desc = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/div[1]').text
+        drama_image = driver.find_element_by_xpath('//*[@id="main_pack"]/div[2]/div[2]/div[1]/div[2]/div[2]/a/img').get_attribute('src')
+        driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
 
         doc = {
             'drama_title': drama_title,
             'drama_image': drama_image,
-            'drama_desc': drama_desc
+            'drama_desc': drama_desc,
+            'board_title': receive_board_title
         }
         db2.dracurrer.insert_one(doc);
         return jsonify({'msg': '등록이 완료되었습니다!'})
