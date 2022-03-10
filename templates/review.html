@@ -24,61 +24,113 @@
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <title>Document</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
       body {
         margin: auto;
+        background: linear-gradient(rgb(29, 0, 29), rgb(99, 48, 1));
+        background-repeat: no-repeat;
+        background-size: cover;
       }
+
       .t-box {
         display: inline-block;
         font-size: 35px;
         margin-bottom: 20px;
         font-weight: bold;
+        color: white;
       }
+
       .container-box {
         width: 1000px;
         margin: auto;
         padding: 0px 50px 50px 50px;
       }
+
       .rig-box {
         margin-left: 30px;
       }
+
       .dt-box {
         position: relative;
         font-size: 12px;
         padding-bottom: 30px;
-        border-bottom: 1px solid gray;
-        color: gray;
+        border-bottom: 1px solid orange;
+        color: white;
       }
+
       .sum-box {
         margin-bottom: 10px;
+        color: white;
       }
+
       .bo-box {
         display: flex;
-        border-bottom: 1px solid black;
-        border-top: 1px solid black;
+        border-bottom: 1px solid orange;
+        border-top: 1px solid orange;
         padding-bottom: 30px;
         padding-top: 30px;
       }
+
       .custom-file {
         margin-top: 30px;
         margin-bottom: 16px;
       }
+
       .but-box {
         display: flex;
         justify-content: space-between;
       }
+
       #star {
         height: 40px;
       }
+
       #card-box {
         margin-top: 30px;
       }
+
       select option[value=""][disabled] {
         display: none;
       }
+
       .logo-box {
         width: auto;
         height: 100px;
+        font-family: "Creepster", cursive;
+        font-size: 85px;
+        color: white;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .cont-box {
+        display: flex;
         background-color: white;
+        margin: auto;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .rg-box {
+        width: 430px;
+        padding-top: 20px;
+        padding-left: 30px;
+      }
+      .asd-box {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      div > span {
+        color: red;
+      }
+      .rg-box {
+        width: 400px;
+      }
+      .lk-box {
+        padding-left: 50px;
+        width: 100px;
       }
     </style>
     <script>
@@ -90,29 +142,31 @@
       function listing() {
         $.ajax({
           type: "GET",
-          url: "/api/review",
+          url: "/review",
           data: {},
           success: function (response) {
             let reviews = response["all_review"];
             for (let i = 0; i < reviews.length; i++) {
-              let title = reviews[i]["title"];
-              let contents = reviews[i]["contents"];
-              let star = reviews[i]["star"];
-              let file = reviews[i]["file"];
-              let time = reviews[i]["time"];
+              let titlea = reviews[i]["title"];
+              let contentsa = reviews[i]["contents"];
+              let stara = reviews[i]["star"];
+              let filea = reviews[i]["file"];
+              let timea = reviews[i]["time"];
 
-              let temp_html = `<div class="col">
-                                <div class="card h-100">
-                                    <img src="../static/${file}" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${title}</h5>
-                                            <p class="card-text">${contents}</p>
-                                        </div>
-                                        <div class="card-footer">
-                                            <small class="text-muted">${time} <br> 😍 &nbsp; ${star}</small>
-                                        </div>
-                                </div>
-                            </div>`;
+              let temp_html = `<div class="cont-box">
+                                            <div class="lf-box">
+                                                <img src="../static/${filea}" width="280" height="190">
+                                            </div>
+                                            <div class="asd-box">
+                                                <div class="rg-box">
+                                                    <h2>${titlea}</h2>
+                                                    <p>${contentsa}</p>
+                                                </div>
+                                                 <div class="lk-box">
+                                                    ${timea}&nbsp;&nbsp;😍&nbsp;${stara}
+                                                 </div>
+                                            </div>
+                                          </div>`;
               $("#card-box").append(temp_html);
             }
           },
@@ -134,7 +188,7 @@
 
         $.ajax({
           type: "POST",
-          url: "/api/review",
+          url: "/review",
           data: form_data,
           cache: false,
           contentType: false,
@@ -148,7 +202,7 @@
     </script>
   </head>
   <body>
-    <div class="logo-box"></div>
+    <div class="logo-box">Dracurr<span>e</span>r</div>
     <div class="container-box">
       <div class="bo-box">
         <div class="pos-box">
@@ -225,7 +279,7 @@
           </form>
         </div>
       </div>
-      <div class="row row-cols-1 row-cols-md-3 g-4" id="card-box"></div>
+      <div class="bd-box" id="card-box"></div>
     </div>
   </body>
 </html>

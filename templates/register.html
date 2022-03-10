@@ -24,7 +24,7 @@
       function dataSend() {
         const drama_title_give = document.querySelector("#post-url").value;
         // const board_title_give = document.querySelector("#post-title").value; (추후 게시판 이름 추가 예정)
-        alert("동작!");
+        alert("드라마를 검색 중입니다!");
         $.ajax({
           type: "POST",
           url: "/dramalists",
@@ -33,14 +33,19 @@
             // board_title_give: board_title_give (추후 게시판 이름 추가 예정)
           },
           error: function (error) {
+            const drama_title = document.getElementById("post-url");
+            console.log(drama_title);
+            // window.location.reload();
+            drama_title.value = "";
+            drama_title.value.focus();
             alert("error 발생");
           },
           success: function (response) {
-            if (response["error"] == false) {
-              alert(response["complete"]);
-              window.location.href = "/";
+            if (response["msg"] === "error") {
+              alert("올바른 드라마제목을 입력하세요");
             } else {
-              alert(response["error"]);
+              alert(response["msg"]);
+              window.location.href = "/";
             }
           },
         });

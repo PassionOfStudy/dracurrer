@@ -83,12 +83,11 @@ def saveList():
                 # 'board_title': receive_board_title (추후 게시판 이름 추가 예정)
             }
             db2.dracurrer.insert_one(doc);
-            
             return jsonify({'msg': '등록이 완료되었습니다!'})
         except:
-            print('오류가 발생하였습니다!')
             driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
-            return jsonify({'msg': 'Error'})
+            print('오류가 발생하였습니다!')
+            return jsonify({'msg': 'error'})
     
 @app.route('/dramalists', methods=['GET'])
 def showList():
